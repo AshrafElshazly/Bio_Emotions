@@ -4,6 +4,7 @@ import neurokit2 as nk
 import pandas as pd
 import scipy.io as sio
 import model
+from os.path import exists
 
 heartRate    = 90
 path_ecg     = "../Datasets/bio_resting_5min_100hz.csv"
@@ -20,7 +21,7 @@ def PF_generated_ecg(heartRate):
     data = nk.ecg_intervalrelated(signal)
     data = PFecg.customiz_data(data)
     data.to_csv("Data/HeartManual/generated_ECG_256hz.csv")
-    return data
+    return "Data/HeartManual/generated_ECG_256hz.csv"
 
 def PF_ecg(path):
     PFecg.plot_settings()
@@ -31,7 +32,7 @@ def PF_ecg(path):
     data = nk.ecg_intervalrelated(signal)
     data = PFecg.customiz_data(data)
     data.to_csv("Data/HeartManual/PF_ECG_100hz.csv")
-    return data
+    return "Data/HeartManual/PF_ECG_100hz.csv"
 
 def PE_dreamer(path):
     raw = sio.loadmat(path)
@@ -70,5 +71,19 @@ def recognition_emotion(train_data,path_test_emotion):
     emotion = model.supervised_model(X, y, groups, X_test, y_test, path_test_emotion)
     print(emotion)
     
-
-PE_dreamer(path_dreamer)
+    
+try:
+    exists(path_train)
+except:
+    print("Trainning Data not found, Will generate new data")
+    PE_dreamer(path_dreamer)
+finally:
+    x = input()
+    if x == "test":
+        path_ecg = path_test_emotion
+    elif exists(path_ecg):
+       path_ecg = PF_ecg(path_ecg)
+    else:
+        print("Generating data has been successfully")
+        path_ecg = PF_generated_ecg(heartRate)
+    recognition_emotion(path_train,path_ecg)
