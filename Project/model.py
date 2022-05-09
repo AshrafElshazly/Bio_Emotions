@@ -8,7 +8,7 @@ import time
 
 def preparing_data(path):
     data = pd.read_csv(path)
-    group_kfold = GroupKFold(n_splits=10)
+    group_kfold = GroupKFold(n_splits=14)
     X = np.array(data.loc[:, 'ECG_Rate_Mean':'HRV_SampEn'])
     y = np.array(data['stress_bin'])
     groups = np.array(data['participant'])
@@ -19,7 +19,7 @@ def preparing_data(path):
     return X, y, groups, X_train, X_test, y_train, y_test
 
 def run_clf(clf, X, y, groups, X_test, y_test):
-    cv = GroupKFold(n_splits=10)
+    cv = GroupKFold(n_splits=14)
     score = []
     runtime = []
     for fold, (train, test) in enumerate(cv.split(X, y, groups)):
@@ -39,8 +39,8 @@ def supervised_model(X, y, groups, X_test, y_test,path_test_emotion):
     score, runtime = run_clf(model,X, y, groups, X_test, y_test)
     
     results.append(["SVC", round(np.mean(score)*100,1), round(np.mean(runtime),9)])
-    #results_df = pd.DataFrame(results, columns=['Name', 'Score', 'Runtime'])
-    #print(results_df)
+    results_df = pd.DataFrame(results, columns=['Name', 'Score', 'Runtime'])
+    print(results_df)
    
     emotionData = pd.read_csv(path_test_emotion)
     tester = np.array(emotionData.loc[:, 'ECG_Rate_Mean':'HRV_SampEn'])

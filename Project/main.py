@@ -9,7 +9,7 @@ from os.path import exists
 heartRate    = 90
 path_ecg     = "../Datasets/bio_resting_5min_100hz.csv"
 path_dreamer = "../Datasets/DREAMER.mat"
-path_test_emotion = "Data/HeartEmotions/suprise.csv"
+path_test_emotion = "Data/HeartEmotions/sad.csv"
 path_train = "Data/dataML_Modified.csv"
 
 def PF_generated_ecg(heartRate):
