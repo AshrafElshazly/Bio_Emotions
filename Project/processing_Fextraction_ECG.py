@@ -34,11 +34,11 @@ def customiz_data(data):
 
 
 def PF_generated_ecg(heartRate):
-    # PFecg.plot_settings()
+    plot_settings()
     ecg = nk.ecg_simulate(sampling_rate=256, heart_rate=heartRate)
-    # nk.signal_plot(ecg)
+    nk.signal_plot(ecg)
     signal, info = processing(ecg)
-    #nk.ecg_plot(signal[:3000], sampling_rate=256)
+    nk.ecg_plot(signal[:3000], sampling_rate=256)
     data = nk.ecg_intervalrelated(signal)
     data = customiz_data(data)
     data.to_csv("Data/HeartManual/generated_ECG_256hz.csv")
@@ -46,11 +46,11 @@ def PF_generated_ecg(heartRate):
 
 
 def PF_ecg(path):
-    # PFecg.plot_settings()
+    plot_settings()
     ecg = pd.read_csv(path)
-    # nk.signal_plot(ecg['ECG'])
+    nk.signal_plot(ecg['ECG'])
     signal, info = nk.ecg_process(ecg["ECG"], sampling_rate=100)
-    #nk.ecg_plot(signal[:3000], sampling_rate=100)
+    nk.ecg_plot(signal[:3000], sampling_rate=100)
     data = nk.ecg_intervalrelated(signal)
     data = customiz_data(data)
     data.to_csv("Data/HeartManual/PF_ECG_100hz.csv")
