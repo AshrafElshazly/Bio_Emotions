@@ -31,3 +31,27 @@ def customiz_data(data):
         'ECG_Rate_Mean', 'HRV_MeanNN', 'HRV_SDNN', 'HRV_RMSSD', 'HRV_SDSD', 'HRV_CVNN', 'HRV_CVSD', 'HRV_MedianNN', 'HRV_MadNN', 'HRV_MCVNN', 'HRV_IQRNN', 'HRV_HTI', 'HRV_HF', 'HRV_HFn', 'HRV_LnHF', 'HRV_SD1', 'HRV_SD2', 'HRV_SD1SD2', 'HRV_S', 'HRV_CSI', 'HRV_CVI', 'HRV_CSI_Modified', 'HRV_PIP', 'HRV_IALS', 'HRV_PSS', 'HRV_GI', 'HRV_SI', 'HRV_AI', 'HRV_PI', 'HRV_C1d', 'HRV_C1a', 'HRV_SD1d', 'HRV_SD1a', 'HRV_C2d', 'HRV_C2a', 'HRV_SD2d', 'HRV_SD2a', 'HRV_Cd', 'HRV_Ca', 'HRV_SDNNd', 'HRV_SDNNa', 'HRV_DFA_alpha1', 'HRV_DFA_alpha1_ExpRange', 'HRV_DFA_alpha1_ExpMean', 'HRV_DFA_alpha1_DimRange', 'HRV_DFA_alpha1_DimMean', 'HRV_ApEn', 'HRV_SampEn'
     ])
     return data
+
+
+def PF_generated_ecg(heartRate):
+    # PFecg.plot_settings()
+    ecg = nk.ecg_simulate(sampling_rate=256, heart_rate=heartRate)
+    # nk.signal_plot(ecg)
+    signal, info = processing(ecg)
+    #nk.ecg_plot(signal[:3000], sampling_rate=256)
+    data = nk.ecg_intervalrelated(signal)
+    data = customiz_data(data)
+    data.to_csv("Data/HeartManual/generated_ECG_256hz.csv")
+    return "Data/HeartManual/generated_ECG_256hz.csv"
+
+
+def PF_ecg(path):
+    # PFecg.plot_settings()
+    ecg = pd.read_csv(path)
+    # nk.signal_plot(ecg['ECG'])
+    signal, info = nk.ecg_process(ecg["ECG"], sampling_rate=100)
+    #nk.ecg_plot(signal[:3000], sampling_rate=100)
+    data = nk.ecg_intervalrelated(signal)
+    data = customiz_data(data)
+    data.to_csv("Data/HeartManual/PF_ECG_100hz.csv")
+    return "Data/HeartManual/PF_ECG_100hz.csv"

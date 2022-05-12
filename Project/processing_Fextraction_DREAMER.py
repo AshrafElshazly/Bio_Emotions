@@ -1,6 +1,7 @@
 import neurokit2 as nk
 import pandas as pd
 import numpy as np
+import scipy.io as sio
 
 
 def feat_extract_ECG(raw):
@@ -80,3 +81,37 @@ def customiz_data(data):
         'ECG_Rate_Mean', 'HRV_MeanNN', 'HRV_SDNN', 'HRV_RMSSD', 'HRV_SDSD', 'HRV_CVNN', 'HRV_CVSD', 'HRV_MedianNN', 'HRV_MadNN', 'HRV_MCVNN', 'HRV_IQRNN', 'HRV_HTI', 'HRV_HF', 'HRV_HFn', 'HRV_LnHF', 'HRV_SD1', 'HRV_SD2', 'HRV_SD1SD2', 'HRV_S', 'HRV_CSI', 'HRV_CVI', 'HRV_CSI_Modified', 'HRV_PIP', 'HRV_IALS', 'HRV_PSS', 'HRV_GI', 'HRV_SI', 'HRV_AI', 'HRV_PI', 'HRV_C1d', 'HRV_C1a', 'HRV_SD1d', 'HRV_SD1a', 'HRV_C2d', 'HRV_C2a', 'HRV_SD2d', 'HRV_SD2a', 'HRV_Cd', 'HRV_Ca', 'HRV_SDNNd', 'HRV_SDNNa', 'HRV_DFA_alpha1', 'HRV_DFA_alpha1_ExpRange', 'HRV_DFA_alpha1_ExpMean', 'HRV_DFA_alpha1_DimRange', 'HRV_DFA_alpha1_DimMean', 'HRV_ApEn', 'HRV_SampEn', 'gender', 'age', 'target_emotion', 'valence', 'arousal', 'dominance', 'stress_bin', 'participant'
     ])
     return data
+
+
+def PE_dreamer(path):
+    raw = sio.loadmat(path)
+    print("Dataset Load Done")
+    print("  ")
+    print("Processing and Extarctring Featuers....")
+    df_ECG = feat_extract_ECG(raw)
+    print("Processing and Extarctring Featuers Done")
+    df_features = pd.concat([df_ECG], axis=1)
+    df_participant_affective = participant_affective(raw)
+    df_participant_affective["valence"] = (df_participant_affective
+                                           ["valence"].astype(int))
+    df_participant_affective["arousal"] = (df_participant_affective
+                                           ["arousal"].astype(int))
+    df_participant_affective["dominance"] = (df_participant_affective
+                                             ["dominance"].astype(int))
+    df = pd.concat([df_features, df_participant_affective], axis=1)
+
+    data = df.loc[(df['target_emotion'] == 'calmness') |
+                  (df['target_emotion'] == 'happiness') |
+                  (df['target_emotion'] == 'sadness') |
+                  (df['target_emotion'] == 'anger') |
+                  (df['target_emotion'] == 'fear') |
+                  (df['target_emotion'] == 'surprise')
+                  ].copy()
+
+    data['stress_bin'] = data['target_emotion'].map(
+        {'calmness': 0, 'happiness': 1, 'sadness': 2,
+            'anger': 3, 'fear': 4, 'surprise': 5}
+    )
+
+    data = customiz_data(data)
+    data.to_csv('Data/dataML_Modified.csv')
