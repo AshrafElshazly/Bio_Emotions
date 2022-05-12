@@ -7,15 +7,15 @@ import numpy as np
 import time
 
 
-def preparing_data(path):
+def preparing_ML_data(path):
     data = pd.read_csv(path)
     group_kfold = GroupKFold(n_splits=14)
     X = np.array(data.loc[:, 'ECG_Rate_Mean':'HRV_SampEn'])
     y = np.array(data['stress_bin'])
     groups = np.array(data['participant'])
-    for train_index, test_index in group_kfold.split(X, y, groups):
-        X_train, X_test = X[train_index], X[test_index]
-        y_train, y_test = y[train_index], y[test_index]
+    for train, test in group_kfold.split(X, y, groups):
+        X_train, X_test = X[train], X[test]
+        y_train, y_test = y[train], y[test]
 
     return X, y, groups, X_train, X_test, y_train, y_test
 
@@ -33,23 +33,14 @@ def run_clf(clf, X, y, groups, X_test, y_test):
     return score, runtime
 
 
-def supervised_model(X, y, groups, X_test, y_test, path_test_emotion):
+def supervised_model(train_data):
     results = []
-    emotions = ['calm', 'happy', 'sad', 'angry', 'fear', 'suprise']
-
+    X, y, groups, X_train, X_test, y_train, y_test = preparing_ML_data(
+        train_data)
     model = make_pipeline(MinMaxScaler(), SVC(gamma=2, C=1))
-
     score, runtime = run_clf(model, X, y, groups, X_test, y_test)
-
     results.append(["SVC", round(np.mean(score)*100, 1),
                    round(np.mean(runtime), 9)])
-    #results_df = pd.DataFrame(results, columns=['Name', 'Score', 'Runtime'])
-    # print(results_df)
+    result = pd.DataFrame(results, columns=['Name', 'Score', 'Runtime'])
 
-    emotionData = pd.read_csv(path_test_emotion)
-    tester = np.array(emotionData.loc[:, 'ECG_Rate_Mean':'HRV_SampEn'])
-    tester = np.nan_to_num(tester)
-    tester = tester.reshape(1, -1)
-    emotion = model.predict(tester)
-
-    return emotions[emotion[0]]
+    return model, result
