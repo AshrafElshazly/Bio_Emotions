@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import joblib
 from os.path import exists
-import processing_Fextraction_ECG as PFecg
+import ecg as PFecg
 
 
 def run(**kwargs):

@@ -1,7 +1,7 @@
 import model
 from os.path import exists
 import joblib
-import processing_Fextraction_DREAMER as dreamer
+import dreamer
 
 
 def App(train_path: str, dreamer_path: str):
