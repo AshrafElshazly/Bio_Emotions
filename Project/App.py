@@ -5,7 +5,7 @@ from os.path import exists
 import ecg as PFecg
 
 
-def run(**kwargs):
+def app(**kwargs):
     test_path = kwargs.get('test', "")
     ecg_path = kwargs.get('ecg', "")
     heartrate = kwargs.get('heartrate', 80)
@@ -27,4 +27,4 @@ def run(**kwargs):
     return emotions[emotion[0]]
 
 
-print(run(ecg="../Datasets/bio_resting_5min_100hz.csv"))
+print(app(ecg="../Datasets/ecg_100hz.csv"))

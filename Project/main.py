@@ -4,7 +4,7 @@ import joblib
 import dreamer
 
 
-def App(train_path: str, dreamer_path: str):
+def run(train_path: str, dreamer_path: str):
 
     if(not exists(train_path)):
         print("Trainning Data not found, Will generate new data")
@@ -18,4 +18,4 @@ def App(train_path: str, dreamer_path: str):
     return result
 
 
-print(App("Data/dataML_Modified.csv", "../Datasets/DREAMER.mat"))
+print(run("Data/dataML_Modified.csv", "../Datasets/DREAMER.mat"))
