@@ -10,7 +10,7 @@ def plot_settings():
 
 def processing(ecg_signal):
     ecg_cleaned = nk.ecg_clean(
-        ecg_signal, sampling_rate=256, method="engzeemod2012")
+        ecg_signal, sampling_rate=256)
     instant_peaks, rpeaks, = nk.ecg_peaks(ecg_cleaned, sampling_rate=256)
     rate = nk.ecg_rate(rpeaks, sampling_rate=256,
                        desired_length=len(ecg_cleaned))
