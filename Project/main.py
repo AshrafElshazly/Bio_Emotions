@@ -18,4 +18,4 @@ def run(train_path: str, dreamer_path: str):
     return result
 
 
-print(run("Data/dataML_Modified.csv", "../Datasets/DREAMER.mat"))
+print(run("Data/dataML.csv", "../Datasets/DREAMER.mat"))

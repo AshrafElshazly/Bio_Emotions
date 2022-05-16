@@ -41,6 +41,6 @@ def supervised_model(train_data):
     score, runtime = run_clf(model, X, y, groups, X_test, y_test)
     results.append(["SVC", round(np.mean(score)*100, 1),
                    round(np.mean(runtime), 9)])
-    result = pd.DataFrame(results, columns=['Name', 'Score', 'Runtime'])
+    result = pd.DataFrame(results, columns=['Name', 'Accuracy', 'Runtime'])
 
     return model, result
