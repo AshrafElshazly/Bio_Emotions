@@ -21,7 +21,7 @@ def preparing_ML_data(path):
 
 
 def run_clf(clf, X, y, groups, X_test, y_test):
-    cv = GroupKFold(n_splits=14)
+    cv = GroupKFold(n_splits=10)
     score = []
     runtime = []
     for fold, (train, test) in enumerate(cv.split(X, y, groups)):
@@ -37,7 +37,7 @@ def supervised_model(train_data):
     results = []
     X, y, groups, X_train, X_test, y_train, y_test = preparing_ML_data(
         train_data)
-    model = make_pipeline(MinMaxScaler(), SVC(gamma=2, C=1))
+    model = make_pipeline(MinMaxScaler(feature_range=(-1, 1)), SVC(gamma=2, C=1))
     score, runtime = run_clf(model, X, y, groups, X_test, y_test)
     results.append(["SVC", round(np.mean(score)*100, 1),
                    round(np.mean(runtime), 9)])
