@@ -9,7 +9,7 @@ import time
 
 def preparing_ML_data(path):
     data = pd.read_csv(path)
-    group_kfold = GroupKFold(n_splits=14)
+    group_kfold = GroupKFold(n_splits=10)
     X = np.array(data.loc[:, 'ECG_Rate_Mean':'HRV_SampEn'])
     y = np.array(data['stress_bin'])
     groups = np.array(data['participant'])
@@ -37,7 +37,8 @@ def supervised_model(train_data):
     results = []
     X, y, groups, X_train, X_test, y_train, y_test = preparing_ML_data(
         train_data)
-    model = make_pipeline(MinMaxScaler(feature_range=(-1, 1)), SVC(gamma=1.5, C=1))
+    model = make_pipeline(MinMaxScaler(
+        feature_range=(-1, 1)), SVC(gamma=1.5, C=1))
     score, runtime = run_clf(model, X, y, groups, X_test, y_test)
     results.append(["SVC", round(np.mean(score)*100, 1),
                    round(np.mean(runtime), 9)])

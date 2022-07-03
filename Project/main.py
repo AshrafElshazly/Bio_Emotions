@@ -45,4 +45,5 @@ def app(**kwargs):
     return emotions[emotion[0]]
 
 
-print(app(test="data/emotions_signals/suprise.csv"))
+# print(run("Data/dataML.csv", "../Datasets/DREAMER.mat"))
+print(app(test="data/emotions_signals/happy.csv"))
